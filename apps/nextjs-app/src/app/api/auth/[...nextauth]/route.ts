@@ -8,11 +8,31 @@ const handler = NextAuth({
       type: "oauth",
       // This will automatically fetch the endpoint URLs required for OIDC (authorization, token, userinfo)
       wellKnown: `${process.env.OIDC_ISSUER}/.well-known/openid-configuration`,
-      authorization: { params: { scope: "openid email profile" } },
+      authorization: { 
+        params: { 
+          scope: "openid profile email user_info_all",
+          groups_info: "0",
+        } 
+      },
       idToken: true,
       checks: ["pkce", "state"],
       clientId: process.env.OIDC_CLIENT_ID || "",
       clientSecret: process.env.OIDC_CLIENT_SECRET || "",
+      // Override default userinfo to call users-srv/userinfo explicitly
+      userinfo: {
+        url: `${process.env.OIDC_ISSUER}/users-srv/userinfo`,
+        async request(context) {
+          const res = await fetch(`${process.env.OIDC_ISSUER}/users-srv/userinfo`, {
+            headers: {
+              Authorization: `Bearer ${context.tokens.access_token}`,
+            },
+          });
+          const data = await res.json();
+          console.log("--- USERINFO RESPONSE ---");
+          console.log(data);
+          return data;
+        }
+      },
       // Profile callback lets you map the Identity Provider's token claims to the NextAuth 'User' object
       profile(profileData) {
         const profile = profileData as any;

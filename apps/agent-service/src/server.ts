@@ -1,8 +1,13 @@
 import fastify from 'fastify';
 import dotenv from 'dotenv';
+import fs from 'fs';
 import { apiRoutes } from './routes/api';
 import { startSyncEngine } from './sync/cron';
 
+// Load .env.local first, then fallback to .env
+if (fs.existsSync('.env.local')) {
+  dotenv.config({ path: '.env.local' });
+}
 dotenv.config();
 
 const app = fastify({

@@ -15,6 +15,9 @@ export const getLdapClient = async (): Promise<Client> => {
 
   if (bindDn && bindPass) {
     await client.bind(bindDn, bindPass);
+    console.log('LDAP connection successfully established');
+  } else {
+    console.log('LDAP connection (anonymous) ready');
   }
 
   return client;
