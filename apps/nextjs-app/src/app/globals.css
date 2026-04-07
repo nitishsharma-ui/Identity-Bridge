@@ -1,26 +1,42 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg-primary: #050510;
+  --bg-secondary: #0a0a1a;
+  --text-primary: #ffffff;
+  --text-secondary: #94a3b8;
+  --accent-glow: rgba(139, 92, 246, 0.4);
+  --accent-color: #8b5cf6;
+  --status-success: #10b981;
+  --status-error: #ef4444;
+  --card-border: rgba(255, 255, 255, 0.08);
+  --card-bg: rgba(20, 20, 35, 0.4);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg-primary);
+  background-image: 
+    radial-gradient(circle at 15% 50%, rgba(70, 40, 150, 0.15), transparent 25%),
+    radial-gradient(circle at 85% 30%, rgba(40, 70, 150, 0.1), transparent 25%);
+  color: var(--text-primary);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 15px var(--accent-glow); }
+  50% { box-shadow: 0 0 25px var(--accent-glow); }
+  100% { box-shadow: 0 0 15px var(--accent-glow); }
+}
+
+@keyframes slideUpFade {
+  0% { transform: translateY(20px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
 }

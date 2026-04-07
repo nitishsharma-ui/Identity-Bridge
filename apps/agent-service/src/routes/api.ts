@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyPluginAsync } from 'fastify';
-import { getCache } from '../cache';
-import { fetchUserAttrs } from '../ldap/connector';
+import { getCache } from '../modules/state/cache';
+import { fetchUserAttrs } from '../modules/ldap/connector';
 import { AgentResponse, User } from '@identity-bridge/shared-types';
 
 export const apiRoutes: FastifyPluginAsync = async (app: FastifyInstance) => {

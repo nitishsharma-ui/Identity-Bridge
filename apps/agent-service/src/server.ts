@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import { apiRoutes } from './routes/api';
 import { startSyncEngine } from './sync/cron';
+import { runDeltaSync } from './modules/sync/engine';
+import { StateManager } from './modules/state/manager';
 
 // Load .env.local first, then fallback to .env
 if (fs.existsSync('.env.local')) {
@@ -25,6 +27,24 @@ app.get('/health', async () => {
 
 // Register API routes with prefix
 app.register(apiRoutes, { prefix: '/api' });
+
+// Manual Sync Trigger Endpoint
+app.post('/sync/run', async () => {
+  app.log.info('Manual synchronization triggered via Admin API.');
+  const result = await runDeltaSync();
+  return result;
+});
+
+// Sync Status Endpoint
+app.get('/sync/status', async () => {
+  const lastSyncTime = await StateManager.getLastSyncTime();
+  return { 
+    service: 'Active Directory Identity Bridge', 
+    engine: 'SCIM Outbound',
+    status: 'active', 
+    lastSyncTime: lastSyncTime || 'Never (Pending Full Sync)' 
+  };
+});
 
 const start = async () => {
   try {
